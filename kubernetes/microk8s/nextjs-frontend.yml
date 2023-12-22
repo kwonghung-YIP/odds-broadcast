@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nextjs-backend-service
+  labels:
+    app: odds-broadcast
+spec:
+  type: ClusterIP
+  selector:
+    app: odds-broadcast
+    component: nextjs-frontend
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nextjs-backend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: odds-broadcast
+      component: nextjs-frontend
+  template:
+    metadata:
+      labels:
+        app: odds-broadcast
+        component: nextjs-frontend
+    spec:
+      containers:
+        - name: nextjs-server
+          image: localhost:32000/kwonghung/odds-broadcast/nextjs-frontend
+          ports:
+            - containerPort: 3000
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: PORT
+              value: "3000"
+

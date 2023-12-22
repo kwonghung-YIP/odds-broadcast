@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: socketio-backend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: odds-broadcast
+      component: socketio-backend
+  template:
+    metadata:
+      labels:
+        app: odds-broadcast
+        component: socketio-backend
+    spec:
+      containers:
+        - name: socketio-server
+          image: localhost:32000/kwonghung/odds-broadcast/socketio-backend
+          ports:
+            - containerPort: 3005
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: SERVER_PORT
+              value: "3005"
+

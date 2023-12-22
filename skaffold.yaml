@@ -1,0 +1,28 @@
+apiVersion: skaffold/v4beta8
+kind: Config
+
+build:
+  artifacts:
+    - image: localhost:32000/kwonghung/odds-broadcast/nextjs-frontend
+      context: nextjs-frontend
+      docker:
+        dockerfile: Dockerfile
+
+    - image: localhost:32000/kwonghung/odds-broadcast/socketio-backend
+      context: socketio-backend
+      docker:
+        dockerfile: Dockerfile
+  
+  insecureRegistries: ["localhost:32000"]
+
+profiles:
+  - name: microk8s
+    manifests: 
+      rawYaml: [
+        "kubernetes/microk8s/*.yml"
+      ]
+    portForward:
+      - resourceType: service
+        resourceName: nextjs-backend-service
+        port: 3000
+        localPort: 3000
