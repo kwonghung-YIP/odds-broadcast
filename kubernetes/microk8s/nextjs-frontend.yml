@@ -3,12 +3,12 @@ kind: Service
 metadata:
   name: nextjs-backend-service
   labels:
-    app: odds-broadcast
+    app: odds_broadcast
 spec:
   type: ClusterIP
   selector:
-    app: odds-broadcast
-    component: nextjs-frontend
+    app: odds_broadcast
+    component: nextjs_frontend
   ports:
     - protocol: TCP
       port: 3000
@@ -22,13 +22,13 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: odds-broadcast
-      component: nextjs-frontend
+      app: odds_broadcast
+      component: nextjs_frontend
   template:
     metadata:
       labels:
-        app: odds-broadcast
-        component: nextjs-frontend
+        app: odds_broadcast
+        component: nextjs_frontend
     spec:
       containers:
         - name: nextjs-server
@@ -40,4 +40,6 @@ spec:
               value: production
             - name: PORT
               value: "3000"
+            - name: HOSTNAME
+              value: "0.0.0.0"
 

@@ -24,5 +24,21 @@ profiles:
     portForward:
       - resourceType: service
         resourceName: nextjs-backend-service
+        namespace: default
         port: 3000
         localPort: 3000
+        address: 192.168.19.130
+
+      - resourceType: service
+        resourceName: socketio-backend-service
+        namespace: default
+        port: 3005
+        localPort: 3005
+        address: 192.168.19.130
+
+      - resourceType: service
+        resourceName: nginx-service
+        namespace: default
+        port: 80
+        localPort: 80
+        address: 192.168.19.130  

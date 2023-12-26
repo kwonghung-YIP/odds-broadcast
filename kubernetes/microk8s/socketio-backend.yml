@@ -1,3 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: socketio-backend-service
+  labels:
+    app: odds_broadcast
+spec:
+  type: ClusterIP
+  selector:
+    app: odds_broadcast
+    component: socketio_backend
+  ports:
+    - protocol: TCP
+      port: 3005
+      targetPort: 3005
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -6,13 +22,13 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: odds-broadcast
-      component: socketio-backend
+      app: odds_broadcast
+      component: socketio_backend
   template:
     metadata:
       labels:
-        app: odds-broadcast
-        component: socketio-backend
+        app: odds_broadcast
+        component: socketio_backend
     spec:
       containers:
         - name: socketio-server

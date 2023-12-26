@@ -6,3 +6,4 @@
 - microk8s
 - skaffold
 - kubectl
+- k9s
