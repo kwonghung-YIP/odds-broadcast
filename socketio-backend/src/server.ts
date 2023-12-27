@@ -4,7 +4,9 @@ import 'dotenv/config';
 import { RandomDelayTask } from "./RandomDelayTask.js";
 import { ForecastOdd } from "./OddsTable.js";
 import random from "random";
+import * as pino from "pino";
 
+const logger = pino.pino();
 const httpServer = createServer();
 const io = new Server(httpServer,{
     cors: {
@@ -15,15 +17,15 @@ const io = new Server(httpServer,{
 const port = process.env["SERVER_PORT"];
 
 io.on("connection",(socket:Socket) => {
-    console.log(`new session connected:${socket.id}`);
+    logger.info(`new session connected:${socket.id}`);
 
     socket.on('disconnect',(reason:String)=>{
-        console.log(`session disconnect:${socket.id} because ${reason}`);
+        logger.info(`session disconnect:${socket.id} because ${reason}`);
     });
 });
 
 io.on("new_namespace",(namespace:Namespace) => {
-    console.log(`new namespace created: ${namespace.name}`);
+    logger.info(`new namespace created: ${namespace.name}`);
 });
 
 const task = RandomDelayTask(() => {
@@ -36,6 +38,6 @@ const task = RandomDelayTask(() => {
 },20,2000)
 
 httpServer.listen(port,() => {
-    console.log(`server listen to port ${port}...`);
+    logger.info(`server listen to port ${port}...`);
     task.run();    
 });

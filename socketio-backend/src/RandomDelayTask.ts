@@ -1,6 +1,9 @@
 import random from "random";
+import * as pino from "pino";
 
 type callbackFn = () => void;
+
+const logger = pino.pino();
 
 export const RandomDelayTask = (
     callback:callbackFn,
@@ -18,14 +21,14 @@ export const RandomDelayTask = (
 
     const runCallback = ():void => {
         execCount++;
-        console.log(`run task ${execCount}...`);
+        logger.debug(`run task ${execCount}...`);
         clearTimeout(timeoutId);
 
         if (execCount<noOfExec) {
             callback();
             callSetTimeout();
         } else {
-            console.log(`task completed`);
+            logger.info(`task completed`);
         }
     }
 

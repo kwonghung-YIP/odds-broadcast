@@ -19,8 +19,12 @@ profiles:
   - name: microk8s
     manifests: 
       rawYaml: [
-        "kubernetes/microk8s/*.yml"
+        "kubernetes/microk8s/nextjs-frontend.yml",
+        "kubernetes/microk8s/socketio-backend.yml",
+        "kubernetes/microk8s/nginx.yml"
       ]
+
+  - name: port-forward
     portForward:
       - resourceType: service
         resourceName: nextjs-backend-service
@@ -39,6 +43,7 @@ profiles:
       - resourceType: service
         resourceName: nginx-service
         namespace: default
-        port: 80
-        localPort: 80
-        address: 192.168.19.130  
+        port: 8080
+        localPort: 8080
+        address: 192.168.19.130
+
