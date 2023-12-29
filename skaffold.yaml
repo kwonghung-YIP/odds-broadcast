@@ -12,7 +12,7 @@ build:
       context: socketio-backend
       docker:
         dockerfile: Dockerfile
-  
+
   insecureRegistries: ["localhost:32000"]
 
 profiles:

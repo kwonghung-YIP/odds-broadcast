@@ -67,4 +67,37 @@ spec:
               value: "3005"
             - name: REDIS_HOST
               value: "redis-service:6379"
+            - name: EXEC_JSFILE
+              value: "server.js"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: broadcast-service-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: odds_broadcast
+      component: broadcast_service
+  template:
+    metadata:
+      labels:
+        app: odds_broadcast
+        component: broadcast_service
+    spec:
+      containers:
+        - name: socketio-server
+          image: localhost:32000/kwonghung/odds-broadcast/socketio-backend
+          ports:
+            - containerPort: 3005
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: SERVER_PORT
+              value: "3005"
+            - name: REDIS_HOST
+              value: "redis-service:6379"
+            - name: EXEC_JSFILE
+              value: "broadcastService.js"
 

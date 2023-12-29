@@ -1,4 +1,8 @@
-FROM node:20.9-alpine as build
+ARG NODEJS_VERSION=20.9-alpine
+
+FROM node:${NODEJS_VERSION} as build
+
+ENV EXEC_JSFILE=server.js
 
 WORKDIR /app/build
 
@@ -7,7 +11,7 @@ COPY . .
 RUN npm install
 RUN npx tsc
 
-FROM node:20.9-alpine as production
+FROM node:${NODEJS_VERSION} as production
 
 WORKDIR /app
 
@@ -24,7 +28,7 @@ RUN npm ci --only=production
 
 USER node
 
-CMD ["node", "server.js"]
+CMD ["sh","-c","node ${EXEC_JSFILE}"]
 
 
 

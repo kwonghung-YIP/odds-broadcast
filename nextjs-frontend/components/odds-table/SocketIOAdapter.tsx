@@ -21,7 +21,6 @@ export const SocketIOAdapter = memo(({serverConfig,updateOdds}:SocketIOAdapterPr
     const [connected, setConnected] = useState(false);
 
     useEffect(()=>{
-        //logger.info(serverConfig.uri);
         const socket = io(serverConfig.uri,{
             path: serverConfig.path,
             transports: ["websocket"]
@@ -38,7 +37,7 @@ export const SocketIOAdapter = memo(({serverConfig,updateOdds}:SocketIOAdapterPr
         });
 
         socket.on(serverConfig.event,(event:ForecastOdd)=> {
-            //console.log(`received odds ${JSON.stringify(event)}`);
+            logger.debug(`received odds ${JSON.stringify(event)}`);
             updateOdds(event);
         });
 
