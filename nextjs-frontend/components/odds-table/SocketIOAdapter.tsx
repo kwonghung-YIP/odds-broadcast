@@ -23,7 +23,8 @@ export const SocketIOAdapter = memo(({serverConfig,updateOdds}:SocketIOAdapterPr
     useEffect(()=>{
         //logger.info(serverConfig.uri);
         const socket = io(serverConfig.uri,{
-            path: serverConfig.path
+            path: serverConfig.path,
+            transports: ["websocket"]
         });
 
         socket.on('connect',() => {
