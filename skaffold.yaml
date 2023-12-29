@@ -21,7 +21,8 @@ profiles:
       rawYaml: [
         "kubernetes/microk8s/nextjs-frontend.yml",
         "kubernetes/microk8s/socketio-backend.yml",
-        "kubernetes/microk8s/nginx.yml"
+        "kubernetes/microk8s/redis.yml",
+        #"kubernetes/microk8s/nginx.yml"
       ]
 
   - name: port-forward

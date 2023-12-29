@@ -11,6 +11,11 @@ enableMapSet()
 
 const ForecastOddsTable = () => {
 
+    const socketIOUri = process.env["SOCKET_IO_URI"] || "/";
+    const socketIOPath = process.env["SOCKET_IO_PATH"] || "/my-socketio-path/";
+
+    //console.log(socketIOUri);
+
     let horsesMap:Map<number,Horse> = new Map()
     let initOddsMap:Map<string,ForecastOdd> = new Map()
 
@@ -34,7 +39,9 @@ const ForecastOddsTable = () => {
     return (
         <>
             <ForecastOddsTableView horses={horsesMap} odds={oddsMap}/>
-            <SocketIOAdapter serverConfig={{uri:"http://192.168.19.130:3005/",event:"odds"}} updateOdds={updateOdds}/>
+            <SocketIOAdapter serverConfig={{
+                uri:socketIOUri,path:socketIOPath,event:"odds"
+                }} updateOdds={updateOdds}/>
         </>
     )
 }

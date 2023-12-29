@@ -1,9 +1,11 @@
 import { memo, useEffect, useState } from "react"
 import { ForecastOdd } from "./OddsTable"
 import { io } from "socket.io-client"
+import * as pino from "pino";
 
 type SocketIOServerConfig = {
     uri: string,
+    path: string,
     event: string
 };
 
@@ -12,20 +14,25 @@ type SocketIOAdapterProps = {
     updateOdds: (odds:ForecastOdd) => void
 };
 
+const logger = pino.pino();
+
 export const SocketIOAdapter = memo(({serverConfig,updateOdds}:SocketIOAdapterProps) => {
 
     const [connected, setConnected] = useState(false);
 
     useEffect(()=>{
-        const socket = io(serverConfig.uri);
+        //logger.info(serverConfig.uri);
+        const socket = io(serverConfig.uri,{
+            path: serverConfig.path
+        });
 
         socket.on('connect',() => {
-            //console.log(`client connect: ${socket.connected} id: ${socket.id}`);
+            logger.info(`client connect: ${socket.connected} id: ${socket.id}`);
             setConnected(socket.connected);
         });
 
         socket.on('disconnect', (reason:string) => {
-            //console.log(`client disconnect: ${socket.connected} reason ${reason}`);
+            logger.info(`client disconnect: ${socket.connected} reason ${reason}`);
             setConnected(socket.connected);
         });
 
@@ -35,19 +42,19 @@ export const SocketIOAdapter = memo(({serverConfig,updateOdds}:SocketIOAdapterPr
         });
 
         socket.io.on("reconnect_attempt",(attempt:number) => {
-            console.log(`socket client reconnect attempt: ${attempt}`);
+            logger.error(`socket client reconnect attempt: ${attempt}`);
         });
 
         socket.io.on("reconnect_failed",() => {
-            console.log(`socket client reconnect failed`);
+            logger.error(`socket client reconnect failed`);
         });
 
         socket.io.on("error",(error:Error) => {
-            console.log(`socket client error: ${JSON.stringify(error)}`);
+            logger.error(`socket client error: ${JSON.stringify(error)}`);
         });
 
         socket.io.on("reconnect_error",(error:Error) => {
-            console.log(`socket client reconnect_error: ${JSON.stringify(error)}`);
+            logger.error(`socket client reconnect_error: ${JSON.stringify(error)}`);
         });
 
         //console.log("client socket connecting...");

@@ -3,6 +3,14 @@
 skaffold dev --profile microk8s
 ```
 
+## Docker run commands
+```bash
+docker run \
+  --name redis --rm -it \
+  -p 6379:6379 \
+  redis:7.2
+```
+
 ## Development VM tools
 - git curl
 - On My Zsh, powerfont
@@ -12,3 +20,4 @@ skaffold dev --profile microk8s
 - skaffold
 - kubectl
 - k9s
+

@@ -1,28 +1,28 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: nextjs-backend-ingress
+  name: nextjs-frontend-ingress
   labels:
     app: odds_broadcast
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
+  #annotations:
+  #  nginx.ingress.kubernetes.io/rewrite-target: /nextjs/$1
 spec:
   ingressClassName: nginx
   rules:
     - http:
         paths:
-          - path: /nextjs(/|$)(.*)
-            pathType: ImplementationSpecific
+          - path: /nextjs/
+            pathType: Prefix
             backend:
               service:
-                name: nextjs-backend-service
+                name: nextjs-frontend-service
                 port:
                   number: 3000
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: nextjs-backend-service
+  name: nextjs-frontend-service
   labels:
     app: odds_broadcast
 spec:
@@ -38,7 +38,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nextjs-backend-deployment
+  name: nextjs-frontend-deployment
 spec:
   replicas: 3
   selector:

@@ -1,20 +1,30 @@
 import { createServer } from "node:http";
 import { Namespace, Server, Socket } from "socket.io";
+import { createAdapter } from "@socket.io/redis-adapter";
+import { createClient } from "redis";
 import 'dotenv/config';
-import { RandomDelayTask } from "./RandomDelayTask.js";
-import { ForecastOdd } from "./OddsTable.js";
 import random from "random";
 import * as pino from "pino";
 
+import { RandomDelayTask } from "./RandomDelayTask.js";
+import { ForecastOdd } from "./OddsTable.js";
+
+
+const port = process.env["SERVER_PORT"];
+const socketIOPath = process.env["SOCKETIO_PATH"] || "/my-socketio-path/";
+const redisHost = process.env["REDIS_HOST"] || "localhost:6379";
+
 const logger = pino.pino();
 const httpServer = createServer();
-const io = new Server(httpServer,{
+const io = new Server({
+    path: socketIOPath,
     cors: {
         origin: "http://192.168.19.130:3000",
         methods: ["GET","POST"]
     }
 });
-const port = process.env["SERVER_PORT"];
+const pubClient = createClient({url:`redis://${redisHost}`});
+const subClient = pubClient.duplicate();
 
 io.on("connection",(socket:Socket) => {
     logger.info(`new session connected:${socket.id}`);
@@ -37,7 +47,13 @@ const task = RandomDelayTask(() => {
     io.emit("odds",odds);
 },20,2000)
 
-httpServer.listen(port,() => {
-    logger.info(`server listen to port ${port}...`);
-    task.run();    
-});
+Promise.all([pubClient.connect(),subClient.connect()]).then(() => {
+    logger.info("redis clients connected");
+    io.adapter(createAdapter(pubClient,subClient));
+    httpServer.listen(port,() => {
+        logger.info(`server listen to port ${port}...`);
+        io.attach(httpServer);
+        task.run();    
+    });
+})
+

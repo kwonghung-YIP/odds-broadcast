@@ -1,3 +1,28 @@
+#
+# nginx ingress advance annotations settings reference:
+# https://docs.nginx.com/nginx-ingress-controller/configuration/ingress-resources/advanced-configuration-with-annotations/
+#
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: socketio-backend-ingress
+  labels:
+    app: odds_broadcast
+  #annotations:
+  #  nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - path: /my-socketio-path/
+            pathType: Prefix
+            backend:
+              service:
+                name: socketio-backend-service
+                port:
+                  number: 3005
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -40,4 +65,6 @@ spec:
               value: production
             - name: SERVER_PORT
               value: "3005"
+            - name: REDIS_HOST
+              value: "redis-service:6379"
 
