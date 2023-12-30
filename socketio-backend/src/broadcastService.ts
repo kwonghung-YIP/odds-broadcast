@@ -32,3 +32,22 @@ Promise.all([pubClient.connect(),subClient.connect()]).then(() => {
     io.adapter(createAdapter(pubClient,subClient));
     task.run();
 });
+
+process.on("SIGINT",() => {
+    logger.info("SIGNINT received...");
+    gracefulShutdown();
+});
+
+process.on("SIGTERM",() => {
+    logger.info("SIGNTERM received...");
+    gracefulShutdown();
+});
+
+const gracefulShutdown = () => {
+    io.close(() => {
+        logger.info("all socket.io connections closed");
+    });
+    Promise.all([pubClient.quit(),subClient.quit()]).then(() => {
+        logger.info("all redis clients closed...");
+    });
+}

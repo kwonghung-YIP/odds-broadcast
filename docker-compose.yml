@@ -1,5 +1,10 @@
 version: '3.8'
 services:
+  redis:
+    image: redis:7.2
+    ports:
+      - 6379:6739
+
   socketio-server:
     image: kwonghung/odds-broadcast-socketio-backend:1.0.0
     build:
@@ -11,6 +16,19 @@ services:
     environment:
       - NODE_ENV=production
       - SERVER_PORT=3005
+      - REDIS_HOST=redis:6379
+      - EXEC_JSFILE=server.js
+
+  broadcast-service:
+    image: kwonghung/odds-broadcast-socketio-backend:1.0.0
+    build:
+      context: ./socketio-backend
+    environment:
+      - NODE_ENV=production
+      - SERVER_PORT=3005
+      - REDIS_HOST=redis:6379
+      - EXEC_JSFILE=broadcastService.js
+
   next-frontend:
     image: kwonghung/odd-broadcast-nextjs-frontend:1.0.0
     build:
