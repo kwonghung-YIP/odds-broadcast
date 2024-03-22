@@ -27,6 +27,7 @@
 sudo apt update
 sudo apt install git curl zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+sudo apt-get install fonts-powerline
 ```
 - On My Zsh, powerfont
 - docker
