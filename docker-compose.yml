@@ -3,7 +3,7 @@ services:
   redis:
     image: redis:7.2
     ports:
-      - 6379:6739
+      - 6379:6379
 
   socketio-server:
     image: kwonghung/odds-broadcast-socketio-backend:1.0.0
